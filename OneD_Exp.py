@@ -12,15 +12,15 @@ T = 2000
 C = 1
 
 # Setting for repeated experiment
-N = 2  # Number of independent runs
+N = 100  # Number of independent runs
 rng = np.random.default_rng(2022)   # Initialize the random number generator
 all_losses = np.empty([N, 2, T])    # The three dimensions are number of random seeds, number of algorithms and time horizon
 
 
 # Definition of the adversary; x is a sample from U[-1,1]
 def adversary(x):
-    # The gradient is the combination of a purely random term and a "trend"
-    return 0.5 * x + 0.5 * np.cos(t * np.pi * 4 / T)
+    # The gradient is the combination of a purely random term, a "trend" and a bias
+    return 0.6 * x + 0.3 * np.cos(t * np.pi * 4 / T) - 0.1
 
 
 for n in range(N):
@@ -72,8 +72,12 @@ for n in range(N):
 
     all_losses[n, 1, :] = losses_baseline
 
+mean = np.mean(all_losses, axis=0)
+std = np.std(all_losses, axis=0)
 
 plt.figure()
-plt.plot(np.arange(1, T + 1), all_losses[1,0,:], '-', label="ours")
-plt.plot(np.arange(1, T + 1), all_losses[1,1,:], '-', label="baseline")
+plt.plot(np.arange(1, T + 1), mean[0, :], '-', label="ours")
+plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0, :], color='C0', alpha=0.2)
+plt.plot(np.arange(1, T + 1), mean[1, :], '-', label="baseline")
+plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
 plt.legend()
