@@ -74,3 +74,23 @@ class Baseline:
         self.beta_raw = self.beta_next_raw
         self.beta = self.beta_next
         self.prediction = self.beta * self.wealth_past
+
+
+class Doubling:
+    # Algorithm 2 in our paper
+    def __init__(self, G, lam, C):
+        self.t = 1
+        self.G = G
+        self.lam = lam
+        self.alpha = 2 + 4 * lam / G
+        self.C = C * (np.sqrt(2) - 1) / np.sqrt(2 * self.alpha) / G
+        self.base = Ours(self.G, self.lam, self.C)
+
+    def get_prediction(self):
+        if self.t & (self.t - 1) == 0:
+            self.base = Ours(self.G, self.lam, self.C / self.t)
+        return self.base.get_prediction()
+
+    def update(self, gt):
+        self.base.update(gt)
+        self.t += 1
