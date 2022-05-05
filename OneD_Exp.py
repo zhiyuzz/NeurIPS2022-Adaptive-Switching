@@ -6,7 +6,7 @@ G = 1   # Lipschitz constant
 lam = 1   # Switching cost weight
 
 # Time horizon
-T = 2000
+T = 5000
 
 # Hyperparameter for the algorithms, C = 1 is the most natural choice that matches the essence of "parameter-freeness"
 C = 1
@@ -14,13 +14,13 @@ C = 1
 # Setting for repeated experiment
 N = 100  # Number of independent runs
 rng = np.random.default_rng(2022)   # Initialize the random number generator
-all_losses = np.empty([N, 2, T])    # The three dimensions are number of random seeds, number of algorithms and time horizon
+all_profit = np.empty([N, 2, T])    # The three dimensions are number of random seeds, number of algorithms and time horizon
 
 
 # Definition of the adversary; x is a sample from U[-1,1]
 def adversary(x):
     # The gradient is the combination of a purely random term, a "trend" and a bias
-    return 0.6 * x + 0.3 * np.cos(t * np.pi * 4 / T) - 0.1
+    return 0.6 * x + 0.3 * np.cos(t * np.pi / 500) - 0.1
 
 
 for n in range(N):
@@ -30,7 +30,7 @@ for n in range(N):
 
     # Create the algorithm, starting from our algorithm
     alg_ours = Ours(G, lam, C)
-    losses_ours = np.empty(T)
+    profit_ours = np.empty(T)
     prediction = 0
 
     # Run our algorithm
@@ -41,18 +41,18 @@ for n in range(N):
 
         # Compute cumulative losses
         gt = adversary(random_seq[t])
-        losses_ours[t] = prediction * gt + lam * np.abs(prev_prediction - prediction)
+        profit_ours[t] = prediction * gt - lam * np.abs(prev_prediction - prediction)
         if t != 0:
-            losses_ours[t] += losses_ours[t-1]
+            profit_ours[t] += profit_ours[t - 1]
 
         # Update
-        alg_ours.update(gt)
+        alg_ours.update(-gt)
 
-    all_losses[n, 0, :] = losses_ours
+    all_profit[n, 0, :] = profit_ours
 
     # Repeat for the baseline
     alg_baseline = Baseline(G, lam, C)
-    losses_baseline = np.empty(T)
+    profit_baseline = np.empty(T)
     prediction = 0
 
     # Run the baseline
@@ -63,21 +63,27 @@ for n in range(N):
 
         # Compute cumulative losses
         gt = adversary(random_seq[t])
-        losses_baseline[t] = prediction * gt + lam * np.abs(prev_prediction - prediction)
+        profit_baseline[t] = prediction * gt - lam * np.abs(prev_prediction - prediction)
         if t != 0:
-            losses_baseline[t] += losses_baseline[t-1]
+            profit_baseline[t] += profit_baseline[t - 1]
 
         # Update
-        alg_baseline.update(gt)
+        alg_baseline.update(-gt)
 
-    all_losses[n, 1, :] = losses_baseline
+    all_profit[n, 1, :] = profit_baseline
 
-mean = np.mean(all_losses, axis=0)
-std = np.std(all_losses, axis=0)
+mean = np.mean(all_profit, axis=0)
+std = np.std(all_profit, axis=0)
 
 plt.figure()
-plt.plot(np.arange(1, T + 1), mean[0, :], '-', label="ours")
+# plt.rcParams['text.usetex'] = True
+plt.rcParams.update({'font.size': 14})
+plt.plot(np.arange(1, T + 1), mean[0, :], '-', label="Ours")
 plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0, :], color='C0', alpha=0.2)
-plt.plot(np.arange(1, T + 1), mean[1, :], '-', label="baseline")
+plt.plot(np.arange(1, T + 1), mean[1, :], '-', label="Baseline")
 plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
-plt.legend()
+plt.xlabel('t')
+plt.ylabel('$Cumulative return$')
+plt.legend(loc='upper left')
+
+plt.savefig("Figures/C1_lam1.pdf", bbox_inches='tight')
