@@ -3,7 +3,7 @@ from Algorithm import *
 
 # Problem constants
 G = 1   # Lipschitz constant
-lam = 1   # Switching cost weight
+lam = 0.1   # Switching cost weight
 D = 5   # Number of assets
 
 # Time horizon
@@ -45,7 +45,7 @@ for n in range(N):
     # Run our algorithm
     for t in range(T):
         # Get prediction
-        prev_prediction = prediction
+        prev_prediction = prediction.copy()
         for d in range(D):
             prediction[d] = alg_ours[d].get_prediction()
 
@@ -71,7 +71,7 @@ for n in range(N):
     # Run our algorithm
     for t in range(T):
         # Get prediction
-        prev_prediction = prediction
+        prev_prediction = prediction.copy()
         for d in range(D):
             prediction[d] = alg_baseline[d].get_prediction()
 
@@ -93,9 +93,9 @@ std = np.std(all_profit, axis=0)
 
 plt.figure()
 plt.rcParams.update({'font.size': 14})
-plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=1$, $\lambda=1$")
+plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=1$, $\lambda=0.1$")
 plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0, :], color='C0', alpha=0.2)
-plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=1$, $\lambda=1$")
+plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=1$, $\lambda=0.1$")
 plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
 plt.xlabel('t')
 plt.ylabel('Cumulative return')

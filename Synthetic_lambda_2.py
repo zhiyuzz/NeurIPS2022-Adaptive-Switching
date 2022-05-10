@@ -3,7 +3,7 @@ from Algorithm import *
 
 # Problem constants
 G = 1   # Lipschitz constant
-lam = 5   # Switching cost weight
+lam = 1   # Switching cost weight
 D = 5   # Number of assets
 
 # Time horizon
@@ -11,7 +11,7 @@ T = 3000
 
 # Hyperparameter for the algorithms
 C1 = 1
-C2 = 20
+C2 = 10
 
 # Setting for repeated experiment
 N = 50  # Number of repeated trials
@@ -46,7 +46,7 @@ for n in range(N):
     # Run our algorithm
     for t in range(T):
         # Get prediction
-        prev_prediction = prediction
+        prev_prediction = prediction.copy()
         for d in range(D):
             prediction[d] = alg_ours[d].get_prediction()
 
@@ -72,7 +72,7 @@ for n in range(N):
     # Run our algorithm
     for t in range(T):
         # Get prediction
-        prev_prediction = prediction
+        prev_prediction = prediction.copy()
         for d in range(D):
             prediction[d] = alg_baseline[d].get_prediction()
 
@@ -94,12 +94,12 @@ std = np.std(all_profit, axis=0)
 
 plt.figure()
 plt.rcParams.update({'font.size': 14})
-plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=1$, $\lambda=5$")
+plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=1$, $\lambda=1$")
 plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0, :], color='C0', alpha=0.2)
-plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=20$, $\lambda=5$")
+plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=10$, $\lambda=1$")
 plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
 plt.xlabel('t')
 plt.ylabel('Cumulative return')
 plt.legend(loc='upper left')
 
-plt.savefig("Figures/Synthetic_lambda_5.pdf", bbox_inches='tight')
+plt.savefig("Figures/Synthetic_lambda_2.pdf", bbox_inches='tight')
