@@ -99,7 +99,7 @@ plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0
 plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=10$, $\lambda=0.1$")
 plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
 plt.xlabel('t')
-plt.ylabel('Cumulative return')
+plt.ylabel('Increased wealth')
 plt.legend(loc='upper left')
 
 plt.savefig("Figures/Synthetic_tuneC_1.pdf", bbox_inches='tight')

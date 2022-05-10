@@ -27,7 +27,7 @@ class Ours:
 
 
 class Baseline:
-    # Algorithm 1 of [ZCP22], "Adversarial Tracking Control via Strongly Adaptive Online Learning with Memory", adapted
+    # Algorithm 1 of [ZCP22a], "Adversarial Tracking Control via Strongly Adaptive Online Learning with Memory", adapted
     def __init__(self, G, lam, C):
 
         # Problem constants
