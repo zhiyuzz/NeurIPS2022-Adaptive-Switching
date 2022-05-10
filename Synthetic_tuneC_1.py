@@ -3,7 +3,7 @@ from Algorithm import *
 
 # Problem constants
 G = 1   # Lipschitz constant
-lam = 1   # Switching cost weight
+lam = 0.1   # Switching cost weight
 D = 5   # Number of assets
 
 # Time horizon
@@ -11,7 +11,7 @@ T = 3000
 
 # Hyperparameter for the algorithms
 C1 = 1
-C2 = 20
+C2 = 4
 
 # Setting for repeated experiment
 N = 50  # Number of repeated trials
@@ -46,7 +46,7 @@ for n in range(N):
     # Run our algorithm
     for t in range(T):
         # Get prediction
-        prev_prediction = prediction
+        prev_prediction = prediction.copy()
         for d in range(D):
             prediction[d] = alg_ours[d].get_prediction()
 
@@ -72,7 +72,7 @@ for n in range(N):
     # Run our algorithm
     for t in range(T):
         # Get prediction
-        prev_prediction = prediction
+        prev_prediction = prediction.copy()
         for d in range(D):
             prediction[d] = alg_baseline[d].get_prediction()
 
@@ -102,4 +102,4 @@ plt.xlabel('t')
 plt.ylabel('Cumulative return')
 plt.legend(loc='upper left')
 
-plt.savefig("Figures/HighD_fig2.pdf", bbox_inches='tight')
+plt.savefig("Figures/Synthetic_tuneC_1.pdf", bbox_inches='tight')

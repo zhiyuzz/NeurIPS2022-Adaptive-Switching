@@ -10,7 +10,8 @@ D = 5   # Number of assets
 T = 3000
 
 # Hyperparameter for the algorithms
-C = 1
+C1 = 20
+C2 = 20
 
 # Setting for repeated experiment
 N = 50  # Number of repeated trials
@@ -21,12 +22,12 @@ all_profit = np.empty([N, 2, T])    # The three dimensions are number of random 
 # Definition of the adversary; each entry of x is a sample from U[-1,1]
 def adversary(x):
     # The gradients are combinations of a purely random term, a "trend" and a bias
-    a = 0.4 * np.ones(D)
-    a[0] = 0.2 * x[0] + 0.4 * np.sin((t / 500) * np.pi)
-    a[1] = 0.3 * x[1] + 0.3 * np.sin((t / 500 + 1 / 2) * np.pi)
-    a[2] = 0.4 * x[2] + 0.2 * np.sin((t / 500 + 1) * np.pi)
-    a[3] = 0.5 * x[3] + 0.1 * np.sin((t / 500 + 3 / 2) * np.pi)
-    a[4] = 0.5 * x[4] + 0.1
+    a = 0.2 * np.ones(D)
+    a[0] = 0.4 * x[0] + 0.4 * np.sin((t / 500) * np.pi)
+    a[1] = 0.5 * x[1] + 0.3 * np.sin((t / 500 + 1 / 2) * np.pi)
+    a[2] = 0.6 * x[2] + 0.2 * np.sin((t / 500 + 1) * np.pi)
+    a[3] = 0.7 * x[3] + 0.1 * np.sin((t / 500 + 3 / 2) * np.pi)
+    a[4] = 0.8 * x[4]
     return a
 
 
@@ -38,7 +39,7 @@ for n in range(N):
     # Create the list of base algorithms, starting from our Algorithm 1
     alg_ours = []
     for d in range(D):
-        alg_ours.append(Ours(G, lam, C / 5))
+        alg_ours.append(Ours(G, lam, C1 / 5))
     profit_ours = np.empty(T)
     prediction = np.zeros(D)
 
@@ -64,7 +65,7 @@ for n in range(N):
     # Repeat for the baseline
     alg_baseline = []
     for d in range(D):
-        alg_baseline.append(Baseline(G, lam, C / 5))
+        alg_baseline.append(Baseline(G, lam, C2 / 5))
     profit_baseline = np.empty(T)
     prediction = np.zeros(D)
 
@@ -93,12 +94,12 @@ std = np.std(all_profit, axis=0)
 
 plt.figure()
 plt.rcParams.update({'font.size': 14})
-plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=1$, $\lambda=1$")
+plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=20$, $\lambda=1$")
 plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0, :], color='C0', alpha=0.2)
-plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=1$, $\lambda=1$")
+plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=20$, $\lambda=1$")
 plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
 plt.xlabel('t')
 plt.ylabel('Cumulative return')
 plt.legend(loc='upper left')
 
-plt.savefig("Figures/HighD_fig6.pdf", bbox_inches='tight')
+plt.savefig("Figures/Synthetic_tuneC_2.pdf", bbox_inches='tight')

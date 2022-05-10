@@ -26,7 +26,7 @@ def adversary(x):
     a[1] = 0.3 * x[1] + 0.3 * np.sin((t / 500 + 1 / 2) * np.pi)
     a[2] = 0.4 * x[2] + 0.2 * np.sin((t / 500 + 1) * np.pi)
     a[3] = 0.5 * x[3] + 0.1 * np.sin((t / 500 + 3 / 2) * np.pi)
-    a[4] = 0.55 * x[4] + 0.05
+    a[4] = 0.5 * x[4] + 0.1
     return a
 
 
@@ -101,4 +101,4 @@ plt.xlabel('t')
 plt.ylabel('Cumulative return')
 plt.legend(loc='upper left')
 
-plt.savefig("Figures/HighD_fig5.pdf", bbox_inches='tight')
+plt.savefig("Figures/Synthetic_market_2.pdf", bbox_inches='tight')

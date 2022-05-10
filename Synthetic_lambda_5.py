@@ -102,4 +102,4 @@ plt.xlabel('t')
 plt.ylabel('Cumulative return')
 plt.legend(loc='upper left')
 
-plt.savefig("Figures/HighD_fig3.pdf", bbox_inches='tight')
+plt.savefig("Figures/Synthetic_lambda_5.pdf", bbox_inches='tight')
