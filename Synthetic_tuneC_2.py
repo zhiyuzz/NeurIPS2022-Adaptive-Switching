@@ -10,8 +10,8 @@ D = 5   # Number of assets
 T = 3000
 
 # Hyperparameter for the algorithms
-C1 = 10
-C2 = 10
+C1 = 5
+C2 = 5
 
 # Setting for repeated experiment
 N = 50  # Number of repeated trials
@@ -94,9 +94,9 @@ std = np.std(all_profit, axis=0)
 
 plt.figure()
 plt.rcParams.update({'font.size': 14})
-plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=10$, $\lambda=0.1$")
+plt.plot(np.arange(1, T + 1), mean[0, :], '-', label=r"Ours, $C=5$, $\lambda=0.1$")
 plt.fill_between(np.arange(1, T + 1), mean[0, :] - std[0, :], mean[0, :] + std[0, :], color='C0', alpha=0.2)
-plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=10$, $\lambda=0.1$")
+plt.plot(np.arange(1, T + 1), mean[1, :], '-', label=r"Baseline, $C=5$, $\lambda=0.1$")
 plt.fill_between(np.arange(1, T + 1), mean[1, :] - std[1, :], mean[1, :] + std[1, :], color='C1', alpha=0.2)
 plt.xlabel('t')
 plt.ylabel('Increased wealth')

@@ -21,12 +21,12 @@ all_profit = np.empty([N, 2, T])    # The three dimensions are number of random 
 # Definition of the adversary; each entry of x is a sample from U[-1,1]
 def adversary(x):
     # The gradients are combinations of a purely random term, a "trend" and a bias
-    a = 0.2 * np.ones(D)
-    a[0] = 0.4 * x[0] + 0.4 * np.sin((t / 500) * np.pi)
-    a[1] = 0.5 * x[1] + 0.3 * np.sin((t / 500 + 1 / 2) * np.pi)
-    a[2] = 0.6 * x[2] + 0.2 * np.sin((t / 500 + 1) * np.pi)
-    a[3] = 0.7 * x[3] + 0.1 * np.sin((t / 500 + 3 / 2) * np.pi)
-    a[4] = 0.8 * x[4]
+    a = 0.4 * np.ones(D)
+    a[0] = 0.2 * x[0] + 0.4 * np.sin((t / 500) * np.pi)
+    a[1] = 0.3 * x[1] + 0.3 * np.sin((t / 500 + 1 / 2) * np.pi)
+    a[2] = 0.4 * x[2] + 0.2 * np.sin((t / 500 + 1) * np.pi)
+    a[3] = 0.5 * x[3] + 0.1 * np.sin((t / 500 + 3 / 2) * np.pi)
+    a[4] = 0.5 * x[4] + 0.1
     return a
 
 
@@ -101,4 +101,4 @@ plt.xlabel('t')
 plt.ylabel('Increased wealth')
 plt.legend(loc='upper left')
 
-plt.savefig("Figures/Synthetic_param_free.pdf", bbox_inches='tight')
+plt.savefig("Figures/Synthetic_market_3.pdf", bbox_inches='tight')

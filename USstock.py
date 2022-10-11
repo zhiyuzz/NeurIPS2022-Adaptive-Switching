@@ -16,7 +16,7 @@ G = np.ceil(np.amax(np.abs(price_diff)))
 lam = 0.1     # Weight of the transaction cost
 
 C1 = 1   # Hyperparameter for the algorithms
-C2 = 150
+C2 = 10
 
 # Create the list of base algorithms, starting from our Algorithm 1
 alg_ours = []
@@ -77,7 +77,7 @@ for t in range(T):
 plt.figure()
 plt.rcParams.update({'font.size': 14})
 plt.plot(dates[1:], profit_ours, '-', label=r"Ours, $C=1$, $\lambda=0.1$")
-plt.plot(dates[1:], profit_baseline, '-', label=r"Baseline, $C=150$, $\lambda=0.1$")
+plt.plot(dates[1:], profit_baseline, '-', label=r"Baseline, $C=10$, $\lambda=0.1$")
 plt.xlabel('Date')
 plt.ylabel('Increased wealth')
 plt.legend(loc='upper left')
@@ -87,7 +87,7 @@ plt.savefig("Figures/US_stock_return.pdf", bbox_inches='tight')
 # plt.figure()
 # plt.rcParams.update({'font.size': 14})
 # plt.plot(dates[:-1], invest_ours, '-', label=r"Ours, $C=1$, $\lambda=0.1$")
-# plt.plot(dates[:-1], invest_baseline, '-', label=r"Baseline, $C=150$, $\lambda=0.1$")
+# plt.plot(dates[:-1], invest_baseline, '-', label=r"Baseline, $C=10$, $\lambda=0.1$")
 # plt.xlabel('Date')
 # plt.ylabel('Amount of new investment')
 # plt.legend(loc='upper left')
@@ -97,7 +97,7 @@ plt.savefig("Figures/US_stock_return.pdf", bbox_inches='tight')
 plt.figure()
 plt.rcParams.update({'font.size': 14})
 plt.plot(dates[:-1], np.cumsum(invest_ours), '-', label=r"Ours, $C=1$, $\lambda=0.1$")
-plt.plot(dates[:-1], np.cumsum(invest_baseline), '-', label=r"Baseline, $C=150$, $\lambda=0.1$")
+plt.plot(dates[:-1], np.cumsum(invest_baseline), '-', label=r"Baseline, $C=10$, $\lambda=0.1$")
 plt.xlabel('Date')
 plt.ylabel('Cumulative amount of investment')
 plt.legend(loc='upper left')

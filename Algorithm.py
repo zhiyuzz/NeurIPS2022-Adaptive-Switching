@@ -27,16 +27,17 @@ class Ours:
 
 
 class Baseline:
-    # Algorithm 1 of [ZCP22a], "Adversarial Tracking Control via Strongly Adaptive Online Learning with Memory", adapted
+    # Algorithm 1 of [ZCP22a], "Adversarial Tracking Control via Strongly Adaptive Online Learning with Memory"
+    # Version here is surveyed as Algorithm 2 in Appendix A of our paper
     def __init__(self, G, lam, C):
 
         # Problem constants
         self.lam = lam  # lambda
-        self.scale = lam + G
+        self.K = lam + G
 
         # Initialize internal variables; for the "current time" in the main loop
         self.t = 1  # time
-        self.wealth_past = C
+        self.wealth_past = C * self.K
         self.beta_raw = 0
         self.beta = 0
         self.prediction = 0
@@ -51,9 +52,9 @@ class Baseline:
 
     def update(self, gt):
 
-        # Line 4 - compute the next betting fraction
-        self.beta_next_raw = (1 - 1 / self.t) * self.beta_raw - gt / (2 * self.t * self.scale ** 2)
-        bound = 1 / (self.scale * np.sqrt(2 * self.t))
+        # Line 4, 5, 6 - compute the next betting fraction
+        self.beta_next_raw = (1 - 1 / self.t) * self.beta_raw - gt / (2 * self.t * self.K ** 2)
+        bound = 1 / (self.K * np.sqrt(2 * self.t))
         if self.beta_next_raw < - bound:
             self.beta_next = - bound
         elif self.beta_next_raw > bound:
@@ -61,7 +62,7 @@ class Baseline:
         else:
             self.beta_next = self.beta_next_raw
 
-        # Line 5 - compute the wealth
+        # Line 7 - compute the wealth
         wealth_temp = (1 - (gt + self.lam) * self.beta) * self.wealth_past / (1 - self.lam * self.beta_next)
         if self.prediction >= self.beta_next * wealth_temp:
             self.wealth = wealth_temp
@@ -75,22 +76,3 @@ class Baseline:
         self.beta = self.beta_next
         self.prediction = self.beta * self.wealth_past
 
-
-# class Doubling:
-#     # Algorithm 2 in our paper, doubling trick, which is for theoretical purpose and impractical
-#     def __init__(self, G, lam, C):
-#         self.t = 1
-#         self.G = G
-#         self.lam = lam
-#         self.alpha = 2 + 8 * lam / G
-#         self.C = C / np.sqrt(self.alpha) / G
-#         self.base = Ours(self.G, self.lam, self.C)
-#
-#     def get_prediction(self):
-#         if self.t & (self.t - 1) == 0:
-#             self.base = Ours(self.G, self.lam, self.C / self.t)
-#         return self.base.get_prediction()
-#
-#     def update(self, gt):
-#         self.base.update(gt)
-#         self.t += 1
